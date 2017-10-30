@@ -25,10 +25,6 @@ __version__ = 1.0 # Keep alfresco happy!
 __date__ = '2017-10-29'
 __updated__ = '2017-10-29'
 
-DEBUG = 0
-TESTRUN = 0
-PROFILE = 0
-
 def main(argv=None):
     '''Command line options.'''
 
@@ -61,7 +57,7 @@ def main(argv=None):
         # process options
         (opts, args) = parser.parse_args(argv)
 
-	      # The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
+	# The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
         # parameter to speed up the initial document read - unsure if required
         # convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
         cmdline = "/usr/local/bin/convert "
@@ -72,7 +68,7 @@ def main(argv=None):
         if opts.page != "":
             # We add the page number required - 1 (starts at 0) in square brackets to limit the generation to the first page
             source = args[0] + "[" + str(opts.page) + "]"
-	      else:
+	else:
             source = args[0]
  
         if len(args) == 2:
