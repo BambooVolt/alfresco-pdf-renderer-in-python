@@ -12,7 +12,7 @@ It defines a wrapper for generating thumbnails using ImageMagick
 @license:    Released under a BSD license
 
 @contact:    bamboovolt@ecloud-business-solutions.com
-@deffield    updated: 29 Oct 2017 (Alpha release)
+@deffield    updated: 3 Nov 2017 (0.2 release)
 '''
 
 import sys
@@ -21,28 +21,29 @@ import os
 from optparse import OptionParser
 
 __all__ = []
-__version__ = 1.0 # Keep alfresco happy!
+__version__ = 0.2
 __date__ = '2017-10-29'
-__updated__ = '2017-10-29'
+__updated__ = '2017-11-03'
 
 def main(argv=None):
     '''Command line options.'''
 
     program_name = os.path.basename(sys.argv[0])
-    program_version = "1.0"
+    program_version = "1.0" # Keep alfresco happy! This doesn't change and survives changes to this script
     program_build_date = "%s" % __updated__
 
     program_version_string = '%s' % program_version
     program_longdesc = '''''' # optional - give further explanation about what the program does
     program_license = "Copyright 2017 BambooVolt (Unincorporated) Licensed under the BSD License"
-    
+    program_usage = "%prog [options] input.pdf output.png"
+
     if argv is None:
         argv = sys.argv[1:]
     
     # We need to extract the commandline options as provided by Alfresco and modify these to suit our ImageMagick equivalent
     try:
         # setup option parser
-        parser = OptionParser(version=program_version_string, epilog=program_longdesc, description=program_license)
+        parser = OptionParser(usage=program_usage, version=program_version_string, epilog=program_longdesc, description=program_license)
         
         # Fetch desired width and height
         parser.add_option("--height", type="int", dest="height", help="set thumbnail height [default: %default]", default="100", metavar="100")
@@ -57,25 +58,27 @@ def main(argv=None):
         # process options
         (opts, args) = parser.parse_args(argv)
 
-	# The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
-        # parameter to speed up the initial document read - unsure if required
-        # convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
-        cmdline = "/usr/local/bin/convert "
-        
-        if opts.width and opts.height:
-            cmdline += " -define jpeg:size=%dx%d -thumbnail %dx%d^ -gravity north -extent %dx%d" % (opts.width * 2, opts.height * 2, opts.width,opts.height,opts.width,opts.height)
-        
-        if opts.page != "":
-            # We add the page number required - 1 (starts at 0) in square brackets to limit the generation to the first page
-            source = args[0] + "[" + str(opts.page) + "]"
-	else:
-            source = args[0]
- 
-        if len(args) == 2:
+		if len(args) == 2:
+			# The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
+			# parameter to speed up the initial document read - unsure if required
+			# convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
+			cmdline = "/usr/local/bin/convert "
+
+			if opts.width and opts.height:
+				cmdline += " -define jpeg:size=%dx%d -thumbnail %dx%d^ -gravity north -extent %dx%d" % (opts.width * 2, opts.height * 2, opts.width,opts.height,opts.width,opts.height)
+
+			if opts.page:
+				# We add the page number required - 1 (starts at 0) in square brackets to limit the generation to the
+				# first page
+				source = args[0] + "[" + str(opts.page) + "]"
+			else:
+				# No page number supplied - no specs on this but as primary use seems to be thumbnail generation then we'll
+				# just default to the first page
+				source = args[0] + "[0]"
+
             cmdline += " " + source + " " + args[1]
         else:
-            print("Not enough arguments for the input and output files")
-            return 1
+            raise ValueError("Not enough arguments for the input and output files")
         
         # MAIN BODY #
 
@@ -84,8 +87,8 @@ def main(argv=None):
 
     except Exception, e:
         indent = len(program_name) * " "
-        sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "  for help use --help")
+        sys.stderr.write(program_name + ": " + e.message + "\n")
+        sys.stderr.write(indent + "  for help use --help\n\n")
         return 2
 
 if __name__ == "__main__":
