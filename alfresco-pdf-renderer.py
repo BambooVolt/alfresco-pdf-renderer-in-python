@@ -58,23 +58,23 @@ def main(argv=None):
         # process options
         (opts, args) = parser.parse_args(argv)
 
-		if len(args) == 2:
-			# The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
-			# parameter to speed up the initial document read - unsure if required
-			# convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
-			cmdline = "/usr/local/bin/convert "
+	    if len(args) == 2:
+            # The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
+            # parameter to speed up the initial document read - unsure if required
+            # convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
+            cmdline = "/usr/local/bin/convert "
 
-			if opts.width and opts.height:
-				cmdline += " -define jpeg:size=%dx%d -thumbnail %dx%d^ -gravity north -extent %dx%d" % (opts.width * 2, opts.height * 2, opts.width,opts.height,opts.width,opts.height)
+            if opts.width and opts.height:
+                cmdline += " -define jpeg:size=%dx%d -thumbnail %dx%d^ -gravity north -extent %dx%d" % (opts.width * 2, opts.height * 2, opts.width,opts.height,opts.width,opts.height)
 
-			if opts.page:
-				# We add the page number required - 1 (starts at 0) in square brackets to limit the generation to the
-				# first page
-				source = args[0] + "[" + str(opts.page) + "]"
-			else:
-				# No page number supplied - no specs on this but as primary use seems to be thumbnail generation then we'll
-				# just default to the first page
-				source = args[0] + "[0]"
+            if opts.page:
+                # We add the page number required - 1 (starts at 0) in square brackets to limit the generation to the
+                # first page
+                source = args[0] + "[" + str(opts.page) + "]"
+            else:
+                # No page number supplied - no specs on this but as primary use seems to be thumbnail generation then we'll
+                # just default to the first page
+                source = args[0] + "[0]"
 
             cmdline += " " + source + " " + args[1]
         else:
