@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf-8
 '''
- -- python2.7 wrapper for implementing the alfreso-pdf-renderer (itself a wrapper around PDFium)
+ -- python2.7/3.x wrapper for implementing the alfresco-pdf-renderer (itself a wrapper around PDFium)
 
 It defines a wrapper for generating thumbnails using ImageMagick
 
 @author:     bamboovolt
 
-@copyright:  2017 BambooVolt. All rights reserved.
+@copyright:  2017-2019 BambooVolt. All rights reserved.
 
 @license:    Released under a BSD license
 
 @contact:    bamboovolt@ecloud-business-solutions.com
-@deffield    updated: 3 Nov 2017 (0.2 release)
+@deffield    updated: 30 April 2019 (0.3 release)
 '''
 
 import sys
@@ -21,9 +21,9 @@ import os
 from optparse import OptionParser
 
 __all__ = []
-__version__ = 0.2
+__version__ = 0.3
 __date__ = '2017-10-29'
-__updated__ = '2017-11-03'
+__updated__ = '2019-04-30'
 
 def main(argv=None):
     '''Command line options.'''
@@ -34,7 +34,7 @@ def main(argv=None):
 
     program_version_string = '%s' % program_version
     program_longdesc = '''''' # optional - give further explanation about what the program does
-    program_license = "Copyright 2017 BambooVolt (Unincorporated) Licensed under the BSD License"
+    program_license = "Copyright 2017-2019 BambooVolt (Unincorporated) Licensed under the BSD License"
     program_usage = "%prog [options] input.pdf output.png"
 
     if argv is None:
@@ -85,7 +85,7 @@ def main(argv=None):
         # Now launch it
         os.system(cmdline)
 
-    except Exception, e:
+    except Exception as e:
         indent = len(program_name) * " "
         sys.stderr.write(program_name + ": " + e.message + "\n")
         sys.stderr.write(indent + "  for help use --help\n\n")
