@@ -82,9 +82,9 @@ def main(argv=None):
         (opts, args) = parser.parse_args(argv)
 
 		if len(args) == 2:
-            # The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
-            # parameter to speed up the initial document read - unsure if required
-            # convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
+			# The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
+			# parameter to speed up the initial document read - unsure if required
+			# convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
             
 			# Prepend the PATH fix in version 0.4 to accomodate various locations for magick, ghostscript, etc.
 			cmdline = "PATH=" + PathToGhostscriptEtAl + ":$PATH;/usr/local/bin/convert "
