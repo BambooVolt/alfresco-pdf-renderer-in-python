@@ -12,7 +12,25 @@ It defines a wrapper for generating thumbnails using ImageMagick
 @license:    Released under a BSD license
 
 @contact:    bamboovolt@ecloud-business-solutions.com
-@deffield    updated: 30 April 2019 (0.3 release)
+@deffield    updated: 03 November 2019 (0.4 release)
+
+Version History:
+0.4 changelog:
+Added PATH to beginning of commandline to accomodate launching from native packaged tomcat and using native Magick, gs, etc.
+
+Rationale: The Alfresco All in One installer places ghostscript, magick, etc under /opt/alfresco/common/bin and uses a setenv.sh startup
+script to configure this path during tomcat launch.  Since we don't necessarily have that path set in a packaged tomcat instance,
+we need magick (convert) to be able to locate ghostscript (gs) at run time, hence this path is required. The easiest method is
+this way - it's clunky - we know :)
+
+0.3 changelog:
+Initial release
+
+0.2 changelog:
+Beta testing - no release
+
+0.1 changelog:
+PoC at best - no release
 '''
 
 import sys
@@ -21,9 +39,14 @@ import os
 from optparse import OptionParser
 
 __all__ = []
-__version__ = 0.3
+__version__ = 0.4
 __date__ = '2017-10-29'
-__updated__ = '2019-04-30'
+__updated__ = '2019-11-03'
+
+'''
+Set this as required for your environment
+'''
+PathToGhostscriptEtAl = '/usr/local/bin'
 
 def main(argv=None):
     '''Command line options.'''
@@ -58,11 +81,13 @@ def main(argv=None):
         # process options
         (opts, args) = parser.parse_args(argv)
 
-	if len(args) == 2:
+		if len(args) == 2:
             # The example command run at the shell prompt (hence the escaped []'s).  Note the use of the jpeg:size=
             # parameter to speed up the initial document read - unsure if required
             # convert -define jpeg:size=200x200 demo.pdf\[0\] -thumbnail 100x100^ -gravity north -extent 100x100 thumbnail.png
-            cmdline = "/usr/local/bin/convert "
+            
+			# Prepend the PATH fix in version 0.4 to accomodate various locations for magick, ghostscript, etc.
+			cmdline = "PATH=" + PathToGhostscriptEtAl + ":$PATH;/usr/local/bin/convert "
 
             if opts.width and opts.height:
                 cmdline += " -define jpeg:size=%dx%d -thumbnail %dx%d^ -gravity north -extent %dx%d" % (opts.width * 2, opts.height * 2, opts.width,opts.height,opts.width,opts.height)
